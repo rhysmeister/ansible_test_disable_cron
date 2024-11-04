@@ -1,0 +1,17 @@
+---
+- name: Prepare
+  hosts: all
+  become: true
+  vars:
+    required_packages:
+      - cron
+  
+  tasks:
+
+  - name: Update repositories cache
+    ansible.builtin.apt:
+      update_cache: true
+
+  - name: Install requirements
+    ansible.builtin.package:
+      name: "{{ required_packages }}"

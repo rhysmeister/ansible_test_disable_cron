@@ -1,0 +1,7 @@
+---
+# vars file for cron
+cron:
+  name: "Test Job Name"
+  job: "sleep 1"
+  minute: 35
+  hour: 11

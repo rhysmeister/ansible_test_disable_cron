@@ -1,0 +1,93 @@
+---
+# tasks file for cron
+- name: Install a test cron job
+  ansible.builtin.cron:
+    name: "{{ cron.name }}"
+    state: "present"
+    job: "{{ cron.job }}"
+    minute: "{{ cron.minute }}"
+    hour: "{{ cron.hour }}"
+
+- name: What's in root's cron file?
+  command: cat /var/spool/cron/crontabs/root
+  changed_when: false
+
+- name: Disable the cron job
+  ansible.builtin.cron:
+    name: "{{ cron.name }}"
+    state: "present"
+    job: "{{ cron.job }}"
+    minute: "{{ cron.minute }}"
+    hour: "{{ cron.hour }}"
+    disabled: true
+
+- name: What's in root's cron file?
+  ansible.builtin.command: cat /var/spool/cron/crontabs/root
+  changed_when: false
+
+- name: Re-enable the cron job
+  ansible.builtin.cron:
+    name: "{{ cron.name }}"
+    state: "present"
+    job: "{{ cron.job }}"
+    minute: "{{ cron.minute }}"
+    hour: "{{ cron.hour }}"
+    disabled: false
+
+- name: What's in root's cron file?
+  ansible.builtin.command: cat /var/spool/cron/crontabs/root
+  changed_when: false
+
+- name: Use check mode to see if the job is disabled
+  ansible.builtin.cron:
+    name: "{{ cron.name }}"
+    state: "present"
+    disabled: true
+    job: "{{ cron.job }}"
+    minute: "{{ cron.minute }}"
+    hour: "{{ cron.hour }}"
+  check_mode: true
+  register: mycron
+
+- name: Fail the playbook but ignore
+  ansible.builtin.assert:
+    that:
+      - mycron.changed is false
+    success_msg: "cron job is disabled"
+    fail_msg: "cron job is not disabled"
+  ignore_errors: true
+
+- name: Disable the cron job for real
+  ansible.builtin.cron:
+    name: "{{ cron.name }}"
+    state: "present"
+    job: "{{ cron.job }}"
+    minute: "{{ cron.minute }}"
+    hour: "{{ cron.hour }}"
+    disabled: true
+
+- name: Use check mode to see if the job is disabled
+  ansible.builtin.cron:
+    name: "{{ cron.name }}"
+    state: "present"
+    disabled: true
+    job: "{{ cron.job }}"
+    minute: "{{ cron.minute }}"
+    hour: "{{ cron.hour }}"
+  check_mode: true
+  register: mycron2
+
+- name: Is my job disabled?
+  ansible.builtin.assert:
+    that:
+      - mycron2.changed is false
+    success_msg: "cron job is disabled"
+    fail_msg: "cron job is not disabled"
+
+- name: What's in root's cron file?
+  ansible.builtin.command: cat /var/spool/cron/crontabs/root
+  changed_when: false
+
+
+      
+  

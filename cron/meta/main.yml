@@ -1,0 +1,4 @@
+galaxy_info:
+  role_name: cron
+  namespace: "rhysmeister"
+  role_name_check: 1
